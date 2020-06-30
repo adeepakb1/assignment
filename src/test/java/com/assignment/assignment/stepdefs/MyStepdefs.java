@@ -134,7 +134,6 @@ public class MyStepdefs {
         Gson gson = new Gson();
         city = gson.fromJson(response.asString(), CityWeatherResponse.class);
         System.out.println();
-
     }
 
 

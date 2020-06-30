@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 //@RunWith(SpringRunner.class)
 //@ContextConfiguration(classes= AssignmentApplication.class)
 @SpringBootTest
-@CucumberOptions(features = "src/test/resources/features/",plugin = {"pretty",
+@CucumberOptions(features = "src/test/java/features/",plugin = {"pretty",
         "json:target/cucumber-report.json"} )
 public class CucumberRunner {
 }

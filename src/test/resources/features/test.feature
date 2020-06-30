@@ -28,6 +28,7 @@ Feature: Assignment
   @Games
   Scenario Outline: As a user
     And I search the "<city>"
+    And User waits and clicks on "<text-name1>"
 
     Examples:
       | text-name | text-name1 |city|
