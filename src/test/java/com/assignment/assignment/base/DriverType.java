@@ -7,7 +7,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-@Component
+
 public enum DriverType  implements DriverSetup{
 
     CHROME{

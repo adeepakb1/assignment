@@ -1,4 +1,4 @@
-package com.assignment.assignment.Model.Weather;
+package com.assignment.assignment.Weather;
 
 import java.util.List;
 import javax.annotation.Generated;

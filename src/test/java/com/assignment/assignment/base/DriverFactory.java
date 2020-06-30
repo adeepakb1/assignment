@@ -4,26 +4,26 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import static java.lang.ThreadLocal.withInitial;
 
-@Configuration
+@Component("com.assignment.assignment.base.DriverFactory")
+
 public class DriverFactory {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    //Logger logger = LoggerFactory.getLogger(this.getClass());
 
     DriverType selectedType = DriverType.CHROME;
     DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 
-    private DriverFactory(){}
+  //  private DriverFactory(){}
 
-    private static DriverFactory instance = new DriverFactory();
+ //   private  DriverFactory instance = new DriverFactory();
 
-    public static DriverFactory getInstance(){
+   /* public  DriverFactory getInstance(){
         return instance;
-    }
+    }*/
 
     ThreadLocal<WebDriver> driver = withInitial(() -> selectedType.getWebDriverObject(desiredCapabilities));
 

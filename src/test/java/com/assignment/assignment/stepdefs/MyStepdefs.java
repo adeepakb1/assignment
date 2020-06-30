@@ -1,12 +1,15 @@
 package com.assignment.assignment.stepdefs;
 
 import com.assignment.assignment.API.RestController;
+import com.assignment.assignment.AssignmentApplication;
 import com.assignment.assignment.Exp.MatcherException;
-import com.assignment.assignment.Model.Weather.CityWeatherResponse;
-import com.assignment.assignment.Model.Weather.Variable;
+import com.assignment.assignment.Weather.CityWeatherResponse;
+import com.assignment.assignment.Weather.Variable;
+import com.assignment.assignment.base.AbstractPage;
 import com.assignment.assignment.base.DriverFactory;
 import com.assignment.assignment.page.NDTVPage;
 import com.google.gson.Gson;
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -15,9 +18,14 @@ import io.restassured.response.Response;
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 
 public class MyStepdefs {
@@ -25,46 +33,56 @@ public class MyStepdefs {
     static CityWeatherResponse city;
     static Logger logger = LoggerFactory.getLogger(MyStepdefs.class);
     static Map<String, String> infoFromUI;
+    @Autowired
+    NDTVPage ndtvPage;
+
+
+    @Autowired
+    RestController restController;
+
+    @Autowired
+    DriverFactory driverFactory;
+
 
 
 
     @Given("The User opens to ndtv page")
     public void theUserOpensToNdtvPage() {
-        NDTVPage.launchNDTVSearch();
+        ndtvPage.launchNDTVSearch();
     }
 
     @And("User clicks on triple-dot to expand")
     public void userClicksOnTripleDotToExpand() {
 
 
-        NDTVPage.click(By.id("h_sub_menu"));
+        ndtvPage.click(By.id("h_sub_menu"));
         System.out.println();
     }
 
     @And("User clicks on {string}")
     public void userClicksOn(String textName) {
-        NDTVPage.click(By.linkText(textName));
+        ndtvPage.click(By.linkText(textName));
         System.out.println();
     }
 
     @And("User waits and clicks on {string}")
     public void userWaitsAndClicksOn(String arg0) {
-        NDTVPage.waitForAndClick(By.linkText("No Thanks"));
+        ndtvPage.waitForAndClick(By.linkText("No Thanks"));
     }
 
     @When("User lands on weather page")
     public void userLandsOnWeatherPage() {
-        NDTVPage.waitFor(By.id("searchBox"));
+        ndtvPage.waitFor(By.id("searchBox"));
         System.out.println("done");
     }
 
     @Then("User search my {string}")
     public void userSearchMy(String cityName) {
-        NDTVPage.enterSearchTermAs(cityName, By.id("searchBox"));
-        if (NDTVPage.checkWhetherAlreadySelected(By.id(cityName))) {
+        ndtvPage.enterSearchTermAs(cityName, By.id("searchBox"));
+        if (ndtvPage.checkWhetherAlreadySelected(By.id(cityName))) {
 
         } else {
-            NDTVPage.click(By.xpath("//div[@id='messages']/div[65]/label"));
+            ndtvPage.click(By.xpath("//div[@id='messages']/div[65]/label"));
             System.out.println("");
         }
     }
@@ -72,7 +90,7 @@ public class MyStepdefs {
     @Then("User sees the result {string} on screen")
     public void userSeesTheResultOnScreen(String cityName) {
 
-        if (NDTVPage.checkWeatherElementIsPresent(By.xpath("//div[@id='map_canvas']/div/div[4]/div[9]/div/div[2]"))) {
+        if (ndtvPage.checkWeatherElementIsPresent(By.xpath("//div[@id='map_canvas']/div/div[4]/div[9]/div/div[2]"))) {
             logger.info(cityName + " has been found on screen");
 
         } else {
@@ -83,12 +101,12 @@ public class MyStepdefs {
 
     @When("User clicks on the selected {string}")
     public void userClicksOnTheSelected(String arg0) {
-        NDTVPage.click(By.xpath("//div[@id='map_canvas']/div/div[4]/div[9]/div/div[2]"));
+        ndtvPage.click(By.xpath("//div[@id='map_canvas']/div/div[4]/div[9]/div/div[2]"));
     }
 
     @Then("Weather information is shown")
     public void weatherInformationIsShown() {
-        if (NDTVPage.checkWeatherElementIsPresent(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div"))) {
+        if (ndtvPage.checkWeatherElementIsPresent(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div"))) {
             logger.info("weather info has been found on screen");
 
         } else {
@@ -96,11 +114,11 @@ public class MyStepdefs {
         }
         infoFromUI = new HashMap<>();
 
-        String text = DriverFactory.getInstance().getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span/b")).getText();
-        String text1 = DriverFactory.getInstance().getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span[2]/b")).getText();
-        String text2 = DriverFactory.getInstance().getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span[3]/b")).getText();
-        String text3 = DriverFactory.getInstance().getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span[4]/b")).getText();
-        String text4 = DriverFactory.getInstance().getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span[5]/b")).getText();
+        String text = driverFactory.getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span/b")).getText();
+        String text1 = driverFactory.getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span[2]/b")).getText();
+        String text2 = driverFactory.getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span[3]/b")).getText();
+        String text3 = driverFactory.getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span[4]/b")).getText();
+        String text4 = driverFactory.getDriver().findElement(By.xpath("//div[@id='map_canvas']/div/div[6]/div/div/div/div/span[5]/b")).getText();
 
         infoFromUI.put("tempC", text3.split(":")[1].trim());
         infoFromUI.put("tempF", text4.split(":")[1].trim());
@@ -111,13 +129,14 @@ public class MyStepdefs {
 
     @And("I search the {string}")
     public void iSearchThe(String cityName) {
-        RestController restController = new RestController();
+        //RestController restController = new RestController();
         Response response = restController.getWeatherDeatils(cityName);
         Gson gson = new Gson();
         city = gson.fromJson(response.asString(), CityWeatherResponse.class);
         System.out.println();
 
     }
+
 
     @Then("The information from two sources are compared")
     public void theInformationFromTwoSourcesAreCompared() {
@@ -146,5 +165,11 @@ public class MyStepdefs {
         } else {
             throw new MatcherException();
         }
+    }
+
+
+    @After
+    public void closeDriver(){
+        driverFactory.getDriver().close();
     }
 }
